@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: msvc-gateway-eventos
+  cloud:
+    gateway:
+      routes:
+        - id: auth-eventos
+          uri: http://auth-eventos:9000
+          predicates:
+            - Path=/auth/**  # Aquí especificamos el prefijo /auth para las rutas de auth
+
+          filters:
+            - StripPrefix=1  # Eliminamos el prefijo /auth para que coincida con las rutas en el controlador
+
+        - id: msvc-usuarios
+          uri: http://127.0.0.1:8001
+          predicates:
+            - Path=/usuarios/**
+          filters:
+
+            - AuthenticationFilter
+
+        - id: msvc-eventos
+          uri: http://127.0.0.1:8002
+          predicates:
+
+            - Path=/eventos/**
+          filters:
+
+            - AuthenticationFilter
+
+        - id: msvc-ubicacion
+          uri: http://127.0.0.1:8003
+          predicates:
+            - Path=/ubicaciones/**
+          filters:
+
+            - AuthenticationFilter
